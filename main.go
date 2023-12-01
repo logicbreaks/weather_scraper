@@ -187,7 +187,7 @@ func main() {
 	locationun = readLine()
 
 	var key string
-	fmt.Print("Enter your key: ")
+	fmt.Print("Enter your api key: ")
 	key = readLine()
 	fmt.Print("\n")
 
