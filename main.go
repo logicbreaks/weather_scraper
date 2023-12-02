@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"strconv"
 	"time"
 )
 
@@ -180,15 +179,27 @@ func main() {
 	var address string
 	fmt.Print("Enter your address: ")
 	address = readLine()
+	if address == "" {
+		fmt.Println("Please don't leave fields blank.")
+		return
+	}
 	address = url.QueryEscape(address)
 
 	var locationun string
 	fmt.Print("Enter your timezone (https://data.iana.org/time-zones/tzdb-2021a/zone1970.tab): ")
 	locationun = readLine()
+	if locationun == "" {
+		fmt.Println("Please don't leave fields blank.")
+		return
+	}
 
 	var key string
 	fmt.Print("Enter your api key: ")
 	key = readLine()
+	if key == "" {
+		fmt.Println("Please don't leave fields blank.")
+		return
+	}
 	fmt.Print("\n")
 
 	url := fmt.Sprintf("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/%s?unitGroup=metric&key=%s&contentType=json", address, key)
@@ -217,25 +228,10 @@ func main() {
 		fmt.Print("")
 	}
 
-	// Get the current time in the specified location
 	currentTime := time.Now().In(location).Hour()
-	prepared_time := strconv.Itoa(currentTime)
-	if currentTime < 10 {
-		prepared_time = "0" + prepared_time + addition
-	} else {
-		prepared_time = prepared_time + addition
-	}
-	for _, day := range weatherdata.Days {
-		for _, hour := range day.Hours {
-			realhour := hour.Datetime
-			if prepared_time == realhour {
-				fmt.Printf("Temp: %.1f\n", hour.Temp)
-				break
-			}
-		}
-		break
-	}
 	fmt.Printf("Address: %v\n", weatherdata.ResolvedAddress)
+	fmt.Printf("Todays Description: %s\n", weatherdata.Days[0].Description)
+	fmt.Printf("Current Temperature: %.1f°C\n", weatherdata.Days[0].Hours[currentTime].Temp)
 
 }
 
